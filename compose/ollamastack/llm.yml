@@ -1,0 +1,66 @@
+version: '3.8'
+services:
+  ollama-deepseek:
+    image: sloopstash/ollama:v${AIA_OLLAMA_VERSION}
+    entrypoint: /usr/bin/supervisord
+    command: "-c /etc/supervisord.conf"
+    volumes:
+      - ollama-model:/opt/ollama/model
+      - ollama-data:/opt/ollama/data
+      - ollama-log:/opt/ollama/log
+      - ${HOME_DIR}/workload/supervisor/conf/server.conf:/etc/supervisord.conf
+      - ${HOME_DIR}/workload/ollama/${AIA_OLLAMA_VERSION}/conf/supervisor.ini:/opt/ollama/system/supervisor.ini
+    networks:
+      - common
+  ollama-gemma:
+    image: sloopstash/ollama:v${AIA_OLLAMA_VERSION}
+    entrypoint: /usr/bin/supervisord
+    command: "-c /etc/supervisord.conf"
+    volumes:
+      - ollama-gemmamodel:/opt/ollama/gemmamodel
+      - ollama-gemmadata:/opt/ollama/gemmadata
+      - ollama-gemmalog:/opt/ollama/gemmalog1
+      - ${HOME_DIR}/workload/supervisor/conf/server.conf:/etc/supervisord.conf
+      - ${HOME_DIR}/workload/ollama/${AIA_OLLAMA_VERSION}/conf/supervisor.ini:/opt/ollama/system/supervisor.ini
+    networks:
+      - common
+  ollama-Llama:
+    image: sloopstash/ollama:v${AIA_OLLAMA_VERSION}
+    entrypoint: /usr/bin/supervisord
+    command: "-c /etc/supervisord.conf"
+    volumes:
+      - ollama-llamamodel:/opt/ollama/llamamodel
+      - ollama-llamadata:/opt/ollama/llamadata
+      - ollama-llamalog:/opt/ollama/llamalog
+      - ${HOME_DIR}/workload/supervisor/conf/server.conf:/etc/supervisord.conf
+      - ${HOME_DIR}/workload/ollama/${AIA_OLLAMA_VERSION}/conf/supervisor.ini:/opt/ollama/system/supervisor.ini
+    networks:
+      - common 
+volumes:
+  ollama-model:
+    driver: local
+  ollama-data:
+    driver: local
+  ollama-log:
+    driver: local
+  ollama-gemmamodel:
+    driver: local
+  ollama-gemmadata:
+    driver: local
+  ollama-gemmalog:
+    driver: local
+  ollama-llamamodel:
+    driver: local
+  ollama-llamadata:
+    driver: local
+  ollama-llamalog:
+    driver: local          
+networks:
+  common:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: ${AIA_NETWORK}
+          gateway: ${AIA_NETWORK_GATEWAY}
+ 
